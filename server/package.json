@@ -1,0 +1,13 @@
+{
+  "name": "WebexMessages",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "body-parser": "*",
+    "cors": "*",
+    "express": "~4.16.0"
+  }
+}

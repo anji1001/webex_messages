@@ -43,3 +43,10 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+#UI files
+client/node_modules/
+server/client-build/
+server/node_modules/
+/node_modules
+*/node_modules

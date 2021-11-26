@@ -1,0 +1,79 @@
+<nav class="navbar navbar-dark bg-dark px-3 position-absolute height-55 top-0 w-100" role="navigation">
+  <a href="/messages" class="navbar-brand">Webex Messages</a>
+  <button (click)="logout()">Logout</button>
+</nav>
+
+<div class="position-absolute content w-100" #contentScroll *ngIf="messagesList!.length > 0 else loading">
+  <div class="mt-5" *ngIf="messagesList!.length > 0 && ownDetails!">
+    <div class="px-3 mx-3 mb-n1">
+      <ul class="list-group">
+
+        <!-- List of messages in a room -->
+        <li class="list-group-item border-0" *ngFor="let row of messagesList">
+          <div class="d-flex flex-row" [ngClass]="ownDetails?.emails?.includes(row.personEmail) ? 'justify-content-end' : 'justify-content-start'">
+            <div class="rounded-3 p-2"
+              [ngClass]="ownDetails?.emails?.includes(row?.personEmail) ? 'bg-lavendar offset-6': 'bg-light align-self-start'">
+              <div *ngIf="!ownDetails?.emails?.includes(row?.personEmail) else ownMsg" class="text-danger rounded">
+                <div class="d-flex">
+                  <div class="pe-3 text-dark font-small">{{row?.personEmail}}</div>
+                  <div class="text-muted font-small">{{row?.created | date:'short'}}</div>
+                </div>
+                <div class="text-muted">{{row?.text}}</div>
+              </div>
+            </div>
+
+            <!-- If the messages are own message show at right side with different background color -->
+            <ng-template #ownMsg>
+              <div class="text-muted rounded-3">
+                <div class="d-flex">
+                  <div class="font-small text-start pe-3">{{row?.created | date:'short'}}</div>
+                  <div class="dropdown text-end align-self-start">
+                    <button class="btn bg-transparent pt-0 px-0 font-small"><img src="../../assets/svgs/dots-three-horizontal.svg" alt=""
+                        width="15px" height="15px"></button>
+                    <div class="dropdown-content">
+                      <button (click)="getMessageDetails(row.id)" class="btn bg-transparent">View Details</button>
+                      <button (click)="deleteMessage(row.id)" class="btn bg-transparent"><img src="../../assets/svgs/bin2.svg" width="15px"
+                          height="15px" class="me-2">Delete</button>
+                    </div>
+                  </div>
+                </div>
+                <div>{{row?.text}}</div>
+              </div>
+            </ng-template>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Send Message with text input and send button click -->
+<div class="px-3 position-absolute height-55 bottom-10 w-100">
+  <div class="d-flex"><input type="text" class="form-control" [(ngModel)]="message">
+    <button class="ml-n1 bg-white border-0" (click)="sendMessage()"><img src="../../assets/svgs/send.svg" alt=""
+        width="15px" height="15px"></button>
+  </div>
+</div>
+
+<!-- Will show Loading while fetching response -->
+<ng-template #loading>
+  <div class="container h-75 d-flex">
+    <div class="mx-auto align-self-center p-5 w-50 h-50 text-center h2 font-weight-bold">
+      Loading...
+    </div>
+  </div>
+</ng-template>
+
+<!-- View Details modal -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <div class="d-flex justify-content-end"><button _ngcontent-pfp-c14="" class="btn bg-transparent close float-right" (click)="closeModal()">&times;</button></div>
+    <div><strong>Created On: </strong>{{currentMessageDetails?.created}}</div>
+    <div><strong>id: </strong>{{currentMessageDetails?.id}}</div>
+    <div><strong>Email: </strong>{{currentMessageDetails?.personEmail}}</div>
+    <div><strong>Person Id: </strong>{{currentMessageDetails?.personId}}</div>
+    <div><strong>Room Id: </strong>{{currentMessageDetails?.roomId}}</div>
+    <div><strong>Room Type: </strong>{{currentMessageDetails?.roomType}}</div>
+    <div><strong>Message Id: </strong>{{currentMessageDetails?.text}}</div>
+  </div>
+</div>
